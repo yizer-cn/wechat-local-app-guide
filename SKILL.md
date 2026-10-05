@@ -1,11 +1,11 @@
 ---
 name: wechat-local-app-guide
-description: 引导 AI 与用户一起，从零搭建基于本机微信聊天记录的自定义工作台。本 skill 只提供路线与经验，不提供任何组件或数据：先问清用户要解决什么问题，再指出哪些技术路径已经验证通过、关键步骤在哪、哪些坑会翻车，并指向数据获取层所需的 wechat-wcdb-local-extract skill 与可用于界面设计的视觉风格资源。当用户想自己做一个微信记录相关的工具（工作台 / 台账 / 看板 / 检索页），或问「怎么读取本机微信聊天记录并做一个自己的界面」时使用。
+description: 引导 AI 与用户一起，从零搭建基于本机微信聊天记录的自定义工作台。本 skill 只提供路线与经验，不提供任何组件或数据：先问清用户要解决什么问题，再指出哪些技术路径已经验证通过、关键步骤在哪、哪些坑会翻车。数据获取层的方法已内嵌（模块名沿用 wechat-wcdb-local-extract），另给出可用于界面设计的视觉风格资源。当用户想自己做一个微信记录相关的工具（工作台 / 台账 / 看板 / 检索页），或问「怎么读取本机微信聊天记录并做一个自己的界面」时使用。
 agent_created: true
 display_name: 微信本地工作台 · 搭建引导
 display_name_en: "Guide to building your own local WeChat workbench"
-description_zh: 引导 AI 与用户一起从零搭建基于本机微信聊天记录的自定义工作台。只给路线、验证过的路径与踩过的坑，不提供任何组件与数据；数据获取指向 wechat-wcdb-local-extract skill，界面设计推荐可用的视觉风格资源库。
-description_en: Guide an AI and its user to build a custom workbench on top of local WeChat chat history. Provides routes, verified paths and pitfalls only — no components, no data. Points to wechat-wcdb-local-extract for the data layer and recommends visual style libraries for the UI.
+description_zh: 引导 AI 与用户一起从零搭建基于本机微信聊天记录的自定义工作台。只给路线、验证过的路径与踩过的坑，不提供任何组件与数据；数据获取层的方法已内嵌（模块名沿用 wechat-wcdb-local-extract），界面设计推荐可用的视觉风格资源库。
+description_en: Guide an AI and its user to build a custom workbench on top of local WeChat chat history. Provides routes, verified paths and pitfalls only — no components, no data. The data-acquisition layer is embedded (module name kept as wechat-wcdb-local-extract); visual style libraries are recommended for the UI.
 version: 0.3.0
 ---
 
