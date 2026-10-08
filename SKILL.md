@@ -6,7 +6,10 @@ display_name: 微信本地工作台 · 搭建引导
 display_name_en: "Guide to building your own local WeChat workbench"
 description_zh: 引导 AI 与用户一起从零搭建基于本机微信聊天记录的自定义工作台。只给路线、验证过的路径与踩过的坑，不提供任何组件与数据；数据获取层的方法已内嵌（模块名沿用 wechat-wcdb-local-extract），界面设计推荐可用的视觉风格资源库。
 description_en: Guide an AI and its user to build a custom workbench on top of local WeChat chat history. Provides routes, verified paths and pitfalls only — no components, no data. The data-acquisition layer is embedded (module name kept as wechat-wcdb-local-extract); visual style libraries are recommended for the UI.
-version: 0.3.0
+version: 0.3.1
+homepage: https://github.com/yizer-cn/wechat-local-app-guide
+license: CC BY-NC-SA 4.0
+visibility: "public"
 ---
 
 # 微信本地工作台 · 搭建引导
