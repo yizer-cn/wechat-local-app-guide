@@ -4,9 +4,9 @@ description: 引导 AI 与用户一起，从零搭建基于本机微信聊天记
 agent_created: true
 display_name: 微信本地工作台 · 搭建引导
 display_name_en: "Guide to building your own local WeChat workbench"
-description_zh: 引导 AI 与用户一起从零搭建基于本机微信聊天记录的自定义工作台。只给路线、验证过的路径与踩过的坑，不提供任何组件与数据；数据获取层的方法已内嵌（模块名沿用 wechat-wcdb-local-extract），界面设计推荐可用的视觉风格资源库。
-description_en: Guide an AI and its user to build a custom workbench on top of local WeChat chat history. Provides routes, verified paths and pitfalls only — no components, no data. The data-acquisition layer is embedded (module name kept as wechat-wcdb-local-extract); visual style libraries are recommended for the UI.
-version: 0.3.1
+description_zh: 引导 AI 与用户一起从零搭建基于本机微信聊天记录的自定义工作台。**动手前有七问门禁，未问完不得开工**。只给路线、验证过的路径与踩过的坑，不提供任何组件与数据；数据获取层方法已内嵌（模块名沿用 wechat-wcdb-local-extract），并附参考实现规格，可作为界面提示词直接使用。
+description_en: Guide an AI and its user to build a custom workbench on top of local WeChat chat history. A 7-question gate must be completed BEFORE any tool use. Provides routes, verified paths and pitfalls only — no components, no data. The data-acquisition layer is embedded, plus a reference build spec usable as a UI prompt.
+version: 0.4.0
 homepage: https://github.com/yizer-cn/wechat-local-app-guide
 license: CC BY-NC-SA 4.0
 visibility: "public"
@@ -59,7 +59,54 @@ skill 也就活不长久。**只给判断、路径与经验，不给成品**—�
 7. **执行只读操作时向用户声明**。做勘察、读取这类动作时，明确说一句「这一步不改动任何东西」，让用户对安全性有感知。
 8. **展示标识信息时脱敏**。账号、wxid 这类标识只给前后几位，完整值不进对话、不进日志。
 
+
+## 1.5 开工门禁（优先级高于一切技术步骤）
+
+> 0.3.x 最大的失败就在这里：用户说「帮我整理一下微信聊天记录，路径是 …」，
+> 执行方直接开始 `ls` 目录、跑脚本、写界面，七问一个没问，最后界面被推倒重做。
+> 所以本节写成**硬门禁**，不是建议。
+
+**触发条件**：用户提出任何涉及本机微信数据的请求——整理、读取、导出、做个工作台、
+做个看板。**包括他直接 @ 本 skill 并附上数据路径、版本号，甚至已经写好脚本的情况。**
+
+**门禁规则**
+
+1. **停手**：七问没有结论之前，除读取本 skill 自己的文件外，**不得调用任何工具**。
+   禁止 `ls`、禁止扫盘、禁止打开微信目录、禁止装依赖、禁止解密。
+   理由：勘察会制造「我已经知道环境和账号了」的错觉，于是 Q1/Q2 被吞掉；
+   而 Q3–Q7 依然没答案，等于用十几次工具调用换了零信息。
+2. **第一轮回复只做两件事**：说预期（第 0 节「第一句话」）+ 问 Q1。
+   结尾必须有一行进度：`进度：已确认 0/7 · 下一个问题：Q1`。
+3. **每轮结束报进度**，把未答项按编号列出来。缺口可见，才不会漏。
+4. **只允许两组合并提问**：`Q1+Q2`（环境与账号）、`Q4+Q5`（会话与时间范围）。
+   合并时必须同一条消息内按题编号，不能揉成一句。
+5. **允许自行探测的只有两项**：操作系统、微信版本号。探测后必须回报并请确认
+   （「我读到的是 Windows 11 / 微信 4.2.x，对吗？」）。
+   **Q2 的账号必须由用户指定**，不得用「最近登录的那个」直接开工。
+6. **采用默认值必须当面说**：「Q3 你没说，我先按默认形态走，随时可改」。
+   静默套默认等于没问。
+7. **答完先落表**：七问结束输出「需求档案」（模板见 `01-discovery.md` 末尾），
+   用户确认后才进入第 1 步勘察。
+
+**为什么这么严**：Q3 决定信息结构（按时间 / 按人 / 按规则），Q4–Q5 决定数据量，
+Q6 决定视觉，Q7 决定页面。任何一项用默认顶替，都会在界面成型后返工，
+返工成本远高于多问四轮。
+
+### 施工前必读（防止重复踩已记录过的坑）
+
+分册里已经写下的结论，如果执行前没读，就会当成新问题重新踩一遍。
+每进入一个阶段，先读对应分册，并在回复里引一句「按 0X 第 N 步执行」表明已读：
+
+| 阶段 | 必须先读 |
+|---|---|
+| 动手写代码前 | `02`、`03`、`07` 三篇的对应章节 |
+| 写界面之前 | `05`（布局与交互）、`07` 第三节（启动脚本、缓存） |
+| 交付之前 | `06` 验收清单 |
+
 ## 2. 主流程（七问，分四组，一次一个）
+
+> 下面这张表是**门禁清单**，不是参考资料。未答（或未经用户确认的默认）不得进入第 1 步勘察。
+> 每轮回复末尾报告 `已确认 n/7`，并把未答项列出来。
 
 ### 第 1 组：可行性（三问；Q1 / Q2 不通过就停下并说明原因，Q3 答不上来则走默认形态）
 
@@ -125,8 +172,10 @@ skill 也就活不长久。**只给判断、路径与经验，不给成品**—�
 | 环节 | 覆盖内容 | 读哪篇 |
 |---|---|---|
 | 密钥与解密 | XOR 掩码 + 内嵌 salt 定向 PBKDF2；选择性解密 message / contact / session 库 | `02-data-layer.md` |
-| 消息提取 | zstd 解压、local_type 掩码、real_sender_id 反推、WAL 处理 | `02-data-layer.md` |
+| 消息提取 | zstd 解压、local_type 掩码、`Name2Id` 发送人映射、系统消息解析、WAL 处理 | `02-data-layer.md` |
 | 媒体解密 | 图片 V2 容器 / wxgf / 动画表情 / 视频 / 文件 / 视频号 | `03-media-layer.md` |
+| 环境差异 | 哪些步骤因机器而异、哪些是必经步骤、症状该怎么查 | `08-env-variance.md` |
+| 参考实现规格 | 页面与交互的全量规格，可直接当提示词用 | `09-build-spec.md` |
 
 分册给的是路径、参数、坑与**最小验证片段**（用来判断方向对不对），
 **不含可直接运行的完整实现**——实现由执行本 skill 的 AI 依文档完成。
@@ -153,6 +202,8 @@ skill 也就活不长久。**只给判断、路径与经验，不给成品**—�
 | `references/05-frontend-layout.md` | 布局形态库 + 视觉风格资源 | Q6 讨论时（用户没想法时提供选项） |
 | `references/06-build-and-verify.md` | 每一步怎么判断「做对了」 | 全程，每步做完 |
 | `references/07-pitfalls.md` | 跨层坑清单，按症状索引 | 遇到怪问题时 |
+| `references/08-env-variance.md` | **环境差异**：哪些环节每台机器不同、哪些是必经步骤 | 动手前、换机器时 |
+| `references/09-build-spec.md` | **参考实现规格**：页面、交互、口径的全量描述（可直接当提示词） | 确定要做什么之后 |
 
 ## 6. 交付话术（收尾时对用户说）
 

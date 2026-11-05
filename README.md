@@ -79,7 +79,10 @@ wechat-local-app-guide/
     ├── 04-architecture.md        架构选型与目录骨架
     ├── 05-frontend-layout.md     布局形态与视觉风格资源
     ├── 06-build-and-verify.md    每步怎么判断做对了
-    └── 07-pitfalls.md            坑清单，按症状索引
+    ├── 07-pitfalls.md            坑清单，按症状索引
+    ├── 08-env-variance.md        环境差异：哪些值必须现场探、哪些步骤必经
+    └── 09-build-spec.md          参考实现规格（可直接当界面提示词）
+├── CHANGELOG.md          版本改动与失败复盘
 ```
 
 ## 边界与承诺
